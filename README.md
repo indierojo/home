@@ -1,2 +1,2 @@
-home
+Testing a GIT commit  
 ====
