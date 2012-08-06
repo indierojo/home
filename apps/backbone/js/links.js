@@ -77,10 +77,25 @@
         var values = [];
         var value = '';
         var parsingValue = false;
+        var parsingFunction = false;
         for (var i = 0; i < taskText.length; i++) {
             if(parsingValue)
             {
-                if(taskText[i] === ' ')
+                if(taskText[i] === '(')
+                {
+                    parsingFunction = true;
+                    continue;
+                }
+
+                if(taskText[i] === ')' && parsingFunction)
+                {
+                    values[values.length] = value;
+                    parsingValue = false;
+                    parsingFunction = false;
+                    value = '';
+                }
+
+                if(taskText[i] === ' ' && !parsingFunction)
                 {
                     values[values.length] = value;
                     parsingValue = false;
@@ -108,10 +123,12 @@
         var finalText = taskText;
         for (var i = 0; i < contexts.length; i++) {
             finalText = finalText.replace('@' + contexts[i], '');
+            finalText = finalText.replace('@(' + contexts[i] + ')', '');
         }
 
         for (var j = 0; j < deadlines.length; j++) {
             finalText = finalText.replace('!' + deadlines[j], '');
+            finalText = finalText.replace('!(' + deadlines[i] + ')', '');
         }
 
         return finalText;
