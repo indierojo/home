@@ -2,7 +2,8 @@
     Task = Backbone.Model.extend({
        taskText: null,
        taskContexts: null,
-       timeConstraints: null
+       taskDeadlines: null,
+       taskCollaborators: null
     });
 
     Tasks = Backbone.Collection.extend({
@@ -45,6 +46,11 @@
             for (var j = 0; j < contexts.length; j++) {
                 text += "<span class='context'>@" + contexts[j] + "</span> ";
             }
+
+            var collaborators = model.get('taskCollaborators');
+            for (var k = 0; k < collaborators.length; k++) {
+                text += "<span class='collaborator'>?" + collaborators[k] + "</span> ";
+            }
             text += "</li>";
             $("#taskList").append(text);
         }
@@ -54,10 +60,11 @@
 
     window.parseTaskFrom = function(taskText){
         var contexts = getContexts(taskText);
-        var deadlines = getTimeConstraints(taskText);
-        var text = getTextFrom(taskText, contexts, deadlines);
+        var deadlines = getTaskDeadlines(taskText);
+        var collaborators = getTaskCollaborators(taskText);
+        var text = getTextFrom(taskText, contexts, deadlines, collaborators);
 
-        var task = new Task({taskText: text, taskContexts: contexts, taskDeadlines: deadlines});
+        var task = new Task({taskText: text, taskContexts: contexts, taskDeadlines: deadlines, taskCollaborators: collaborators});
         return task;
     };
 
@@ -65,11 +72,11 @@
         return getFlaggedValueFrom(taskText, '@');
     };
 
-    window.getPeople = function(taskText){
+    window.getTaskCollaborators = function(taskText){
         return getFlaggedValueFrom(taskText, '?');
     };
 
-    window.getTimeConstraints = function(taskText){
+    window.getTaskDeadlines = function(taskText){
         return getFlaggedValueFrom(taskText, '!');
     };
 
@@ -81,7 +88,7 @@
         for (var i = 0; i < taskText.length; i++) {
             if(parsingValue)
             {
-                if(taskText[i] === '(')
+                if(taskText[i] === '(' && value === '')
                 {
                     parsingFunction = true;
                     continue;
@@ -118,7 +125,7 @@
         return values;
     };
 
-    window.getTextFrom = function(taskText, contexts, deadlines)
+    window.getTextFrom = function(taskText, contexts, deadlines, collaborators)
     {
         var finalText = taskText;
         for (var i = 0; i < contexts.length; i++) {
@@ -128,7 +135,12 @@
 
         for (var j = 0; j < deadlines.length; j++) {
             finalText = finalText.replace('!' + deadlines[j], '');
-            finalText = finalText.replace('!(' + deadlines[i] + ')', '');
+            finalText = finalText.replace('!(' + deadlines[j] + ')', '');
+        }
+
+        for (var k = 0; k < collaborators.length; k++) {
+            finalText = finalText.replace('?' + collaborators[k], '');
+            finalText = finalText.replace('?(' + collaborators[k] + ')', '');
         }
 
         return finalText;
