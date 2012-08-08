@@ -1,2 +1,2 @@
-Testing a GIT commit  
+Testing SSH access  
 ====
