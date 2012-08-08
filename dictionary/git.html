@@ -1,0 +1,28 @@
+Adding SSH key to github:
+
+1) login to github, goto account settings
+2) click ~ssh keys 
+3) click add, add public ssh key from .ssh folder
+4) click save
+5) 
+for existing repos:
+      -in the .git/config file, change the address so that it uses the ssh folder
+for new repos:
+      - when you check out, make sure you use the url prefixed by ssh
+
+
+
+
+If you need to change the local username or email:
+1) Navigate to your home directory
+2) Edit the .gitconfig file.
+OR
+use this command:
+git config --global user.email "your_email@youremail.com"
+
+
+
+
+Resources:
+https://help.github.com/articles/set-up-git
+
