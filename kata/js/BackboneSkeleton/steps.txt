@@ -1,0 +1,4 @@
+Following directions from:
+ http://www.iknuth.com/2011/04/getting-started-for-tdd-with-jasmine-usin-backbone-js/
+
+1) Had to download jasmine-standalone (version 1.3.1) from pivotal github account since the link provided in the article downloaded but failed to unzip.
